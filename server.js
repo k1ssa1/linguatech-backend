@@ -24,6 +24,19 @@ app.post('/submit-form', async (req, res) => {
     }
 })
 
+app.post('/save-incomplete-data', async (req, res) => {
+    const contactData = req.body;
+    const incompleteDataWebhook = process.env.SECOND_WEBHOOK_URL;
+
+    try{
+        const response = await axios.post(incompleteDataWebhook, contactData);
+        res.status(200).json({message: 'Successfully sent incomplete data to pabbly', data: response.data})
+    }catch(error){
+        console.error(error)
+        res.status(500).json({message: "There was an error sending the data to pabbly"})
+    }
+})
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
 })
